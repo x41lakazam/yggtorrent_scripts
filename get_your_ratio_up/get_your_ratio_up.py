@@ -1,5 +1,6 @@
-FILES       = ['data_example.txt'] # Just copy paste the torrents list on a page
-TORRENTS_NB = 5              # Automatic scanner will be added soon
+FILES               = ['data_example.txt']  # Just copy paste the torrents list on a page
+TORRENTS_NB         = 5                     # Automatic scanner will be added soon
+MAX_TORRENT_SIZE    = 10                    # In Gb
 
 print('{} BEST LEECH/SEED RATIOS: '.format(TORRENTS_NB))
 print('-'*50)
@@ -18,9 +19,10 @@ for file in FILES:
             torrent[attributes[i]] = value
             i+=1
 
-        torrent['leech'] = int(torrent['leech'])
-        torrent['seed'] = int(torrent['seed'])
-        if torrent['leech'] > 0:
+        torrent['size']     = float(torrent['size'][:-2])
+        torrent['leech']    = int(torrent['leech'])
+        torrent['seed']     = int(torrent['seed'])
+        if torrent['leech'] > 0 and torrent['size'] < MAX_TORRENT_SIZE:
             torrents.append(torrent)
 
 ratios = []
@@ -44,7 +46,7 @@ for best in bests:
     size    = torrent['size']
     ratio   = best[1]
 
-    print('{}. {}\nRatio: {:.3f}\nSeed: {} || Leech: {}\nSize: {}'.format(b, name, ratio, seed, leech, size))
+    print('{}. {}\nRatio: {:.3f}\nSeed: {} || Leech: {}\nSize: {}Gb'.format(b, name, ratio, seed, leech, size))
     if b != len(bests):
         print('-'*50)
 
