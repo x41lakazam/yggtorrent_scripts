@@ -1,6 +1,5 @@
-
-FILES = ['data_example.txt'] # Just copy paste the torrents list on a page, automatic scanner will be added soon
-TORRENTS_NB = 5              # Numbers of bests ratios to display
+FILES       = ['data_example.txt'] # Just copy paste the torrents list on a page
+TORRENTS_NB = 5              # Automatic scanner will be added soon
 
 print('{} BEST LEECH/SEED RATIOS: '.format(TORRENTS_NB))
 print('-'*50)
@@ -39,12 +38,14 @@ bests = ratios[:TORRENTS_NB]
 b=1
 for best in bests:
     torrent = best[0]
-    name = torrent['name']
-    seed = torrent['seed']
-    leech = torrent['leech']
-    ratio = best[1]
+    name    = torrent['name']
+    seed    = torrent['seed']
+    leech   = torrent['leech']
+    size    = torrent['size']
+    ratio   = best[1]
 
-    print('{}. {}\nRatio: {}\nSeed: {} || Leech: {}'.format(b, name, ratio, seed, leech))
-    print('-'*50)
+    print('{}. {}\nRatio: {:.3f}\nSeed: {} || Leech: {}\nSize: {}'.format(b, name, ratio, seed, leech, size))
+    if b != len(bests):
+        print('-'*50)
 
     b+=1
