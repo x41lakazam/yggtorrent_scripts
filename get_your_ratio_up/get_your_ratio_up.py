@@ -1,6 +1,12 @@
 FILES               = ['data_example.txt']  # Just copy paste the torrents list on a page
-TORRENTS_NB         = 5                     # Automatic scanner will be added soon
+TORRENTS_NB         = 15                    # Automatic scanner will be added soon
+MIN_TORRENT_SIZE    = 1
 MAX_TORRENT_SIZE    = 10                    # In Gb
+MIN_SEED            = 10
+
+if not MIN_TORRENT_SIZE: MIN_TORRENT_SIZE = 0
+if not MAX_TORRENT_SIZE: MAX_TORRENT_SIZE = 999
+if not MIN_SEED: MIN_SEED = 0
 
 print('{} BEST LEECH/SEED RATIOS: '.format(TORRENTS_NB))
 print('-'*50)
@@ -9,21 +15,30 @@ print('-'*50)
 torrents    = []
 attributes  = ['name', 'nfo','comments', 'age', 'size', 'compl', 'seed', 'leech']
 
+
+def verify_torrent(torrent):
+    if MIN_TORRENT_SIZE < torrent['size'] < MAX_TORRENT_SIZE and torrent['seed'] > MIN_SEED and torrent['leech'] > 0:
+        return True
+    return False
+
+
 for file in FILES:
 
     lines = open(file, 'r').readlines()
     for line in lines:
         torrent = {}
         i=0
-        for value in line.split('\t'):
-            torrent[attributes[i]] = value
-            i+=1
+        splitted = line.split('\t')
+        if len(splitted) == len(attributes):
+            for value in splitted:
+                torrent[attributes[i]] = value
+                i+=1
 
-        torrent['size']     = float(torrent['size'][:-2])
-        torrent['leech']    = int(torrent['leech'])
-        torrent['seed']     = int(torrent['seed'])
-        if torrent['leech'] > 0 and torrent['size'] < MAX_TORRENT_SIZE:
-            torrents.append(torrent)
+            torrent['size']     = float(torrent['size'][:-2])
+            torrent['leech']    = int(torrent['leech'])
+            torrent['seed']     = int(torrent['seed'])
+            if verify_torrent(torrent):
+                torrents.append(torrent)
 
 ratios = []
 
